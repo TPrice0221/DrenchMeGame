@@ -163,7 +163,7 @@
 </div>
 
 <button id="startBtn" onclick="startGame()">Start</button>
-<button id="stopBtn" onclick="stopGame()">Stop</button>
+<button id="stopBtn" onclick="stopGame()">Quit</button>
 <button id="restartBtn" onclick="restartGame()">Restart</button>
 
 <div id="beatInfo">
@@ -259,7 +259,7 @@ function stopGame() {
   document.getElementById("restartBtn").style.display = "block";
 
   if (!endingGame) {
-    document.getElementById("feedback").innerText = "Stopped ⏹";
+    document.getElementById("feedback").innerText = "Are you not Drenched?!";
   }
 }
 
