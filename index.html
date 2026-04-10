@@ -373,9 +373,7 @@ setTimeout(() => {
   document.body.style.opacity = "1";
 }, 100);
 
-setTimeout(() => {
-  document.body.style.filter = "brightness(1)";
-}, 100);
+
   }
 
   best.hit = true;
@@ -385,7 +383,9 @@ setTimeout(() => {
   setTimeout(() => scoreEl.style.transform = "scale(1)", 100);
 
   target.style.transform = "scale(1.1)";
-  setTimeout(() =>target.style.transform = "scale(1)";
+setTimeout(() => {
+  target.style.transform = "scale(1)";
+}, 100);
 
   updateUI();
 }
