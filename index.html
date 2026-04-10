@@ -308,7 +308,7 @@ function startPulse() {
 
 function spawnLoop() {
   if (!gameStarted) return;
-setTimeout(spawnBall, beatInterval * 0.5);
+setTimeout(spawnBall, beatInterval * 0.7);
   spawnTimeout = setTimeout(spawnLoop, beatInterval);
 }
 
