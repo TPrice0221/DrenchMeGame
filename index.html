@@ -387,6 +387,8 @@ setTimeout(() => target.classList.remove("splash"), 300);
     feedback.innerText = randomDiss();
     target.classList.add("miss");
 document.body.style.opacity = "0.9";
+    target.classList.add("dry");
+setTimeout(() => target.classList.remove("dry"), 300);
 
 setTimeout(() => {
   document.body.style.opacity = "1";
