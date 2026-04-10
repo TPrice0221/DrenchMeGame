@@ -515,8 +515,7 @@ function restartGame() {
   updateUI();
   document.getElementById("feedback").innerText = "";
   startGame();
-}
-  function submitName() {
+}function submitName() {
   let input = document.getElementById("playerName");
   let name = input.value.trim();
 
@@ -530,9 +529,22 @@ function restartGame() {
 
   localStorage.setItem("beatVaultScores", JSON.stringify(scores));
 
+  // hide name entry
   document.getElementById("nameEntry").style.display = "none";
+
+  // hide end screen (THIS is the big one)
+  document.getElementById("endScreen").style.display = "none";
+
+  // reset buttons so user can play again
+  document.getElementById("startBtn").style.display = "block";
+  document.getElementById("stopBtn").style.display = "none";
+  document.getElementById("restartBtn").style.display = "block";
+
+  // clear input for next run
+  input.value = "";
+
   renderLeaderboard();
-  }
+}
 
 function startPulse() {
   let target = document.getElementById("target");
