@@ -395,6 +395,9 @@ document.getElementById("feedback").innerText =
   "\n\n" + resultMessage;
 
 document.getElementById("nameEntry").style.display = "flex";
+  setTimeout(() => {
+  document.getElementById("playerName").focus();
+}, 100);
 
       
 }
