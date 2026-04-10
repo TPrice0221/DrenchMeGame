@@ -7,7 +7,7 @@
   <style>
     body {
       margin: 0;
-      background: url('drench-bg.jpg') no-repeat center center;
+      background: url('drenchme.jpg') no-repeat center center;
       background-size: cover;
       color: white;
       font-family: Arial;
@@ -367,9 +367,11 @@ function handleInput() {
     streak = 0;
     feedback.innerText = randomDiss();
     target.classList.add("miss");
+document.body.style.filter = "brightness(0.7)";
 
-    document.body.style.background = "#220000";
-    setTimeout(() => document.body.style.background = "black", 100);
+setTimeout(() => {
+  document.body.style.filter = "brightness(1)";
+}, 100);
   }
 
   best.hit = true;
