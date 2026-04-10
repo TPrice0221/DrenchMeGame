@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drench Me</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      background: url('drench-bg.jpg') no-repeat center center;
+      background-size: cover;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+      animation: bgMove 25s linear infinite;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: center 0px; }
+      100% { background-position: center 300px; }
+    }
+
+    #overlay {
+      background: rgba(0,0,0,0.6);
+      min-height: 100vh;
+      position: relative;
+      padding-top: 0;
+    }
+
+    #feedback {
+      position: absolute;
+      top: 140px;
+      width: 100%;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 0 0 20px white;
+      white-space: pre-line;
+    }
+
+    #targetWrapper {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* 💧 WATER DROP */
+    #target {
+      width: 140px;
+      height: 180px;
+
+      background: radial-gradient(circle at 50% 30%, #aeefff, #00bfff);
+
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      transform: rotate(45deg);
+
+      box-shadow:
+        0 0 25px rgba(0,200,255,0.5),
+        inset 0 0 20px rgba(255,255,255,0.3);
+
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    #target.pulse {
+      transform: scale(1.08) rotate(45deg);
+      box-shadow: 0 0 40px cyan;
+    }
+
+    #target.hit {
+      box-shadow: 0 0 70px aqua, inset 0 0 30px white;
+    }
+
+    #target.miss {
+      box-shadow: 0 0 70px red, inset 0 0 30px red;
+    }
+
+    .ball {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 2px solid rgba(255,255,255,0.3);
+      box-shadow: 0 0 25px rgba(255,255,255,0.3);
+      pointer-events: none;
+    }
+
+    #bottomUI {
+      position: fixed;
+      bottom: 120px;
+      width: 100%;
+    }
+
+    button {
+      position: fixed;
+      bottom: 80px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
+      z-index: 20;
+    }
+
+    #startBtn { left: 50%; transform: translateX(-50%); }
+    #stopBtn { left: 20%; display:none; }
+    #restartBtn { right: 20%; display:none; }
+
+    #beatInfo {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      opacity: 0.7;
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="overlay">
+  <h1>Drench Me 💧</h1>
+  <div id="feedback"></div>
+</div>
+
+<div id="targetWrapper">
+  <div id="target"></div>
+</div>
+
+<div id="bottomUI">
+  <div id="leaderboard" style="margin-top:10px; font-size:14px;">
+    <b>Top Scores</b>
+    <div id="leaderboardList"></div>
+  </div>
+  <div id="score">Score: 0</div>
+  <div id="streak">Streak: 0</div>
+</div>
+
+<button id="startBtn" onclick="startGame()">Start</button>
+<button id="stopBtn" onclick="stopGame()">Stop</button>
+<button id="restartBtn" onclick="restartGame()">Restart</button>
+
+<div id="beatInfo">
+  Beat: "XoXo"<br>
+  Producer: CannaprizeBEATS
+</div>
+
+<audio id="beat" src="beat.mp3"></audio>
+
+<script>
+let bpm = 167;
+let beatInterval = (60000 / bpm) * 2;
+
+let gameStarted = false;
+let score = 0;
+let streak = 0;
+
+let balls = [];
+let targetCenter = 0;
+let spawnTimeout;
+let pulseInterval;
+
+let lastLine = "";
+let endingGame = false;
+
+/* PRAISE */
+function randomPerfect() {
+  const lines = [
+    "PERFECT 💧","DRIPPIN 🔥","SOAKED 😮‍🔥",
+    "WATER GOD 🌊","LOCKED IN 💎","ABSOLUTE DRIP",
+    "UNTOUCHABLE","PURE FLOW","YOU BUILT DIFFERENT"
+  ];
+  return lines[Math.floor(Math.random() * lines.length)];
+}
+
+function randomGood() {
+  const lines = [
+    "Nice 💧","Clean drip","Keep it flowing",
+    "That was smooth","You getting wet now",
+    "Almost perfect"
+  ];
+  return lines[Math.floor(Math.random() * lines.length)];
+}
+
+/* DISSES */
+function randomDiss() {
+  const lines = [
+    "Dry as hell 😭",
+    "No drip detected",
+    "You missed EVERYTHING",
+    "The beat dodging you",
+    "Embarrassing",
+    "Stay thirsty I guess",
+    "Completely off",
+    "You allergic to rhythm?"
+  ];
+  return lines[Math.floor(Math.random() * lines.length)];
+}
+
+function startGame() {
+  if (gameStarted) return;
+  gameStarted = true;
+  endingGame = false;
+
+  document.getElementById("startBtn").style.display = "none";
+  document.getElementById("stopBtn").style.display = "block";
+  document.getElementById("restartBtn").style.display = "none";
+
+  let rect = document.getElementById("target").getBoundingClientRect();
+  targetCenter = rect.top + rect.height / 2;
+
+  let audio = document.getElementById("beat");
+  audio.currentTime = 0;
+  audio.play();
+  audio.onended = endGame;
+
+  startPulse();
+  spawnLoop();
+}
+
+function stopGame() {
+  gameStarted = false;
+  clearTimeout(spawnTimeout);
+  clearInterval(pulseInterval);
+  document.getElementById("beat").pause();
+
+  balls.forEach(b => b.el.remove());
+  balls = [];
+
+  document.getElementById("startBtn").style.display = "block";
+  document.getElementById("stopBtn").style.display = "none";
+  document.getElementById("restartBtn").style.display = "block";
+
+  if (!endingGame) {
+    document.getElementById("feedback").innerText = "Stopped ⏹";
+  }
+}
+
+function endGame() {
+  endingGame = true;
+  stopGame();
+
+  document.getElementById("feedback").innerText =
+    "Beat Finished 💧\nScore: " + score + "\nStreak: " + streak;
+
+  saveScore(score);
+}
+
+function restartGame() {
+  score = 0;
+  streak = 0;
+  updateUI();
+  document.getElementById("feedback").innerText = "";
+  startGame();
+}
+
+function startPulse() {
+  let target = document.getElementById("target");
+
+  pulseInterval = setInterval(() => {
+    target.classList.add("pulse");
+    setTimeout(() => target.classList.remove("pulse"), 120);
+  }, beatInterval);
+}
+
+function spawnLoop() {
+  if (!gameStarted) return;
+  spawnBall();
+  spawnTimeout = setTimeout(spawnLoop, beatInterval);
+}
+
+function spawnBall() {
+  let ball = document.createElement("div");
+  ball.classList.add("ball");
+  ball.style.top = "-200px";
+  document.body.appendChild(ball);
+
+  let startTime = Date.now();
+  let obj = { el: ball, hit: false };
+  balls.push(obj);
+
+  function animate() {
+    let progress = (Date.now() - startTime) / beatInterval;
+    let endY = targetCenter - (ball.offsetHeight / 2);
+    ball.style.top = (progress * (endY + 200)) + "px";
+
+    if (progress >= 1.3) {
+      ball.remove();
+      balls = balls.filter(b => b !== obj);
+      return;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+function handleInput() {
+  if (!balls.length) return;
+
+  let target = document.getElementById("target");
+  let feedback = document.getElementById("feedback");
+
+  let best = null;
+  let smallestDiff = Infinity;
+
+  balls.forEach(b => {
+    if (b.hit) return;
+    let rect = b.el.getBoundingClientRect();
+    let center = rect.top + rect.height / 2;
+    let diff = Math.abs(center - targetCenter);
+
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      best = b;
+    }
+  });
+
+  if (!best) return;
+
+  let rect = best.el.getBoundingClientRect();
+  let center = rect.top + rect.height / 2;
+  let diff = Math.abs(center - targetCenter);
+
+  target.classList.remove("hit", "miss");
+
+  if (diff < 25) {
+    score += 100;
+    streak++;
+    feedback.innerText = randomPerfect();
+    target.classList.add("hit");
+
+  } else if (diff < 60) {
+    score += 50;
+    streak++;
+    feedback.innerText = randomGood();
+    target.classList.add("hit");
+
+  } else {
+    streak = 0;
+    feedback.innerText = randomDiss();
+    target.classList.add("miss");
+
+    document.body.style.background = "#220000";
+    setTimeout(() => document.body.style.background = "black", 100);
+  }
+
+  best.hit = true;
+
+  let scoreEl = document.getElementById("score");
+  scoreEl.style.transform = "scale(1.2)";
+  setTimeout(() => scoreEl.style.transform = "scale(1)", 100);
+
+  target.style.transform = "scale(1.1) rotate(45deg)";
+  setTimeout(() => target.style.transform = "scale(1) rotate(45deg)", 100);
+
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById("score").innerText = "Score: " + score;
+  document.getElementById("streak").innerText = "Streak: " + streak;
+}
+
+function saveScore(finalScore) {
+  let name = prompt("Enter your name:");
+  if (!name) name = "Anonymous";
+
+  let scores = JSON.parse(localStorage.getItem("beatVaultScores")) || [];
+
+  scores.push({ name, score: finalScore });
+  scores.sort((a, b) => b.score - a.score);
+  scores = scores.slice(0, 5);
+
+  localStorage.setItem("beatVaultScores", JSON.stringify(scores));
+  renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  let list = document.getElementById("leaderboardList");
+  let scores = JSON.parse(localStorage.getItem("beatVaultScores")) || [];
+
+  list.innerHTML = scores.map((s, i) =>
+    `${i+1}. ${s.name} - ${s.score}`
+  ).join("<br>");
+}
+
+document.addEventListener("pointerdown", handleInput);
+renderLeaderboard();
+</script>
+
+</body>
+</html>
