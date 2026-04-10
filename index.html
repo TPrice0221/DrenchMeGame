@@ -228,7 +228,33 @@
 <div id="targetWrapper">
   <div id="target"></div>
 </div>
+<div id="nameEntry" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 100;
+">
 
+  <div style="font-size: 24px; margin-bottom: 10px;">
+    Enter Your Name
+  </div>
+
+  <input id="playerName" type="text" placeholder="Producer Name"
+    style="padding:10px; border-radius:8px; border:none; font-size:16px;" />
+
+  <button onclick="submitName()"
+    style="margin-top:10px; padding:10px 20px; border:none; border-radius:8px;">
+    Submit
+  </button>
+
+</div>
 <div id="bottomUI">
   <div id="leaderboard" style="display:none;">
     <b>Top Scores</b>
@@ -368,7 +394,9 @@ document.getElementById("feedback").innerText =
   "\nBest Streak: " + bestStreak +
   "\n\n" + resultMessage;
 
-  saveScore(score);
+document.getElementById("nameEntry").style.display = "flex";
+
+      
 }
   function createSplash(x, y) {
   for (let i = 0; i < 6; i++) {
@@ -396,6 +424,23 @@ function restartGame() {
   document.getElementById("feedback").innerText = "";
   startGame();
 }
+  function submitName() {
+  let input = document.getElementById("playerName");
+  let name = input.value.trim();
+
+  if (!name) name = "Anonymous Producer";
+
+  let scores = JSON.parse(localStorage.getItem("beatVaultScores")) || [];
+
+  scores.push({ name: name, score: score });
+  scores.sort((a, b) => b.score - a.score);
+  scores = scores.slice(0, 5);
+
+  localStorage.setItem("beatVaultScores", JSON.stringify(scores));
+
+  document.getElementById("nameEntry").style.display = "none";
+  renderLeaderboard();
+  }
 
 function startPulse() {
   let target = document.getElementById("target");
