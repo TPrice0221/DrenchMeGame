@@ -482,13 +482,6 @@ if (bestStreak >= 100) {
   resultMessage = "Try again.";
 }
 
-document.getElementById("feedback").innerHTML =
-  `<div style="margin-top: 40px;">
-    <div style="font-size: 32px;">Beat Finished 💧</div>
-    <div style="margin-top: 10px;">Score: ${score}</div>
-    <div>Best Streak: ${bestStreak}</div>
-    <div style="margin-top: 20px;">${resultMessage}</div>
-  </div>`;
 
 document.getElementById("nameEntry").style.display = "flex";
   setTimeout(() => {
