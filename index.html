@@ -45,21 +45,32 @@
     }
 
     /* 💧 WATER DROP */
-    #target {
-      width: 140px;
-      height: 180px;
+#target {
+  width: 120px;
+  height: 160px;
 
-      background: radial-gradient(circle at 50% 30%, #aeefff, #00bfff);
+  background: radial-gradient(circle at 50% 25%, #d4f7ff, #00bfff 70%);
 
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      transform: rotate(45deg);
+  /* actual droplet shape */
+  clip-path: polygon(
+    50% 0%,
+    70% 25%,
+    85% 55%,
+    75% 85%,
+    50% 100%,
+    25% 85%,
+    15% 55%,
+    30% 25%
+  );
 
-      box-shadow:
-        0 0 25px rgba(0,200,255,0.5),
-        inset 0 0 20px rgba(255,255,255,0.3);
+  transform: rotate(0deg);
 
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-    }
+  box-shadow:
+    0 0 25px rgba(0,200,255,0.6),
+    inset 0 0 25px rgba(255,255,255,0.4);
+
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
 
     #target.pulse {
       transform: scale(1.08) rotate(45deg);
