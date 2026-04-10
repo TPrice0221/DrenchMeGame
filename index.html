@@ -106,7 +106,7 @@
 
     #feedback {
       position: absolute;
-      top: 140px;
+      top: 180px;
       width: 100%;
       font-size: 28px;
       font-weight: bold;
@@ -116,7 +116,7 @@
 
     #targetWrapper {
       position: fixed;
-      top: 50%;
+      top: 40%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
@@ -418,6 +418,7 @@ function endGame() {
   endingGame = true;
   stopGame();
   document.getElementById("leaderboard").style.display = "block";
+  document.getElementById("target").style.transform = "scale(0.8)";
 
 let resultMessage = "";
 
@@ -427,10 +428,13 @@ if (bestStreak >= 100) {
   resultMessage = "Try again.";
 }
 
-document.getElementById("feedback").innerText =
-  "Beat Finished 💧\nScore: " + score +
-  "\nBest Streak: " + bestStreak +
-  "\n\n" + resultMessage;
+document.getElementById("feedback").innerHTML =
+  `<div style="margin-top: 40px;">
+    <div style="font-size: 32px;">Beat Finished 💧</div>
+    <div style="margin-top: 10px;">Score: ${score}</div>
+    <div>Best Streak: ${bestStreak}</div>
+    <div style="margin-top: 20px;">${resultMessage}</div>
+  </div>`;
 
 document.getElementById("nameEntry").style.display = "flex";
   setTimeout(() => {
