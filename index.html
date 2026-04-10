@@ -373,6 +373,8 @@ function handleInput() {
     streak++;
     feedback.innerText = randomPerfect();
     target.classList.add("hit");
+    target.classList.add("splash");
+setTimeout(() => target.classList.remove("splash"), 300);
 
   } else if (diff < 60) {
     score += 50;
