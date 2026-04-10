@@ -367,6 +367,7 @@ document.getElementById("feedback").innerText =
 
     const dx = (Math.random() - 0.5) * 300;
 const dy = -(Math.random() * 200);
+    d.style.animationDelay = (Math.random() * 0.1) + "s";
     d.style.left = x + "px";
     d.style.top = y + "px";
     d.style.setProperty("--x", dx + "px");
@@ -474,7 +475,11 @@ if (diff < 25) {
     targetRect.top + targetRect.height / 2
   );
 }
-    else if (diff < 60) {
+    else if (diff < 60) {let targetRect = target.getBoundingClientRect();
+createSplash(
+  targetRect.left + targetRect.width / 2,
+  targetRect.top + targetRect.height / 2
+);
     score += 50;
     streak++;
     feedback.innerText = randomGood();
