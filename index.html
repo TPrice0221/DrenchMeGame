@@ -299,8 +299,18 @@ function endGame() {
   endingGame = true;
   stopGame();
 
-  document.getElementById("feedback").innerText =
-  "Beat Finished 💧\nScore: " + score + "\nBest Streak: " + bestStreak;
+let resultMessage = "";
+
+if (bestStreak >= 10) {
+  resultMessage = "Congrats you won a Free Drench Me Shirt 👕💧";
+} else {
+  resultMessage = "Try again.";
+}
+
+document.getElementById("feedback").innerText =
+  "Beat Finished 💧\nScore: " + score +
+  "\nBest Streak: " + bestStreak +
+  "\n\n" + resultMessage;
 
   saveScore(score);
 }
@@ -391,11 +401,7 @@ if (diff < 25) {
   bestStreak = streak;
 }
 
-  if (bestStreak >= 10) {
-    feedback.innerText = "Congrats you won a free drench me shirt 👕💧";
-  } else {
-    feedback.innerText = randomPerfect();
-  }
+feedback.innerText = randomPerfect();
 
   target.classList.add("hit");
 }
