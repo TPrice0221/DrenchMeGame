@@ -15,6 +15,22 @@
       overflow: hidden;
      
     }
+    .droplet {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: cyan;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: dropletAnim 500ms ease-out forwards;
+}
+
+@keyframes dropletAnim {
+  to {
+    transform: translate(var(--x), var(--y));
+    opacity: 0;
+  }
+}
     h1 {
   font-size: 48px;
   letter-spacing: 2px;
@@ -334,7 +350,25 @@ document.getElementById("feedback").innerText =
 
   saveScore(score);
 }
+  function createSplash(x, y) {
+  for (let i = 0; i < 6; i++) {
+    const d = document.createElement("div");
+    d.className = "droplet";
 
+    const dx = (Math.random() - 0.5) * 80;
+    const dy = (Math.random() - 0.5) * 80;
+
+    d.style.left = x + "px";
+    d.style.top = y + "px";
+    d.style.setProperty("--x", dx + "px");
+    d.style.setProperty("--y", dy + "px");
+
+    document.body.appendChild(d);
+
+    setTimeout(() => d.remove(), 500);
+  }
+  }
+createSplash(hitX, hitY);
 function restartGame() {
   score = 0;
   streak = 0;
