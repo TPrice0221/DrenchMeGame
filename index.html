@@ -224,7 +224,6 @@
 <div id="overlay">
   <h1>Drench Me 💧</h1>
   <div id="feedback"></div>
-</div>
 
 <div id="targetWrapper">
   <div id="target"></div>
@@ -550,11 +549,18 @@ function saveScore(finalScore) {
 }
 function renderLeaderboard() {
   let list = document.getElementById("leaderboardList");
+  let topScoreEl = document.getElementById("topScore");
+
   let scores = JSON.parse(localStorage.getItem("beatVaultScores")) || [];
 
   list.innerHTML = scores.map((s, i) =>
     `${i+1}. ${s.name} - ${s.score}`
   ).join("<br>");
+
+  // 👇 FIXED TOP SCORE
+  if (scores.length > 0 && topScoreEl) {
+    topScoreEl.innerText = "Top Score: " + scores[0].score;
+  }
 }
 
 document.addEventListener("pointerdown", handleInput);
