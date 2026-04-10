@@ -129,7 +129,18 @@
   align-items: center;
   justify-content: center;
 
-  transform: scale(1);
+  background: radial-gradient(circle at 50% 25%, #d4f7ff, #00bfff 70%);
+
+  clip-path: polygon(
+    50% 0%,
+    70% 25%,
+    85% 55%,
+    75% 85%,
+    50% 100%,
+    25% 85%,
+    15% 55%,
+    30% 25%
+  );
 
   box-shadow:
     0 0 25px rgba(0,200,255,0.6),
@@ -239,7 +250,7 @@
   flex-direction: column;
   z-index: 100;
 ">
-<div id="target">
+<div id="targetPreview">
   <svg viewBox="0 0 100 140" width="120" height="160">
     <path d="M50 0 
              C75 35, 95 70, 50 140 
