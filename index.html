@@ -205,6 +205,7 @@
 <audio id="beat" src="DrenchMe2 Mastered.mp3"></audio>
 
 <script>
+let bestStreak = 0;
 let bpm = 120;
 let beatInterval = (60000 / bpm);
 
@@ -299,7 +300,7 @@ function endGame() {
   stopGame();
 
   document.getElementById("feedback").innerText =
-    "Beat Finished 💧\nScore: " + score + "\nStreak: " + streak;
+  "Beat Finished 💧\nScore: " + score + "\nBest Streak: " + bestStreak;
 
   saveScore(score);
 }
@@ -386,8 +387,11 @@ function handleInput() {
 if (diff < 25) {
   score += 100;
   streak++;
+  if (streak > bestStreak) {
+  bestStreak = streak;
+}
 
-  if (streak === 10) {
+  if (bestStreak >= 10) {
     feedback.innerText = "Congrats you won a free drench me shirt 👕💧";
   } else {
     feedback.innerText = randomPerfect();
