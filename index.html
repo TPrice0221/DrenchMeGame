@@ -231,13 +231,22 @@
 </div>
 
 <div id="bottomUI">
-  <div id="leaderboard" style="margin-top:10px; font-size:14px;">
+  <div id="leaderboard" style="display:none;">
     <b>Top Scores</b>
     <div id="leaderboardList"></div>
   </div>
   <div id="score">Score: 0</div>
   <div id="streak">Streak: 0</div>
 </div>
+  <div id="topScore" style="
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+">
+Top Score: 0
+  </div>
 
 <button id="startBtn" onclick="startGame()">Start</button>
 <button id="stopBtn" onclick="stopGame()">Quit</button>
@@ -304,6 +313,7 @@ function startGame() {
   if (gameStarted) return;
   gameStarted = true;
   endingGame = false;
+  document.getElementById("leaderboard").style.display = "none";
 
   document.getElementById("startBtn").style.display = "none";
   document.getElementById("stopBtn").style.display = "block";
@@ -344,6 +354,7 @@ function stopGame() {
 function endGame() {
   endingGame = true;
   stopGame();
+  document.getElementById("leaderboard").style.display = "block";
 
 let resultMessage = "";
 
