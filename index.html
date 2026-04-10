@@ -365,9 +365,8 @@ document.getElementById("feedback").innerText =
     const d = document.createElement("div");
     d.className = "droplet";
 
-    const dx = (Math.random() - 0.5) * 80;
-    const dy = (Math.random() - 0.5) * 80;
-
+    const dx = (Math.random() - 0.5) * 200;
+    const dy = -(Math.random() * 140);
     d.style.left = x + "px";
     d.style.top = y + "px";
     d.style.setProperty("--x", dx + "px");
