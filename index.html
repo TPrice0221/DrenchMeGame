@@ -448,18 +448,22 @@ function updateUI() {
 
 function saveScore(finalScore) {
   let name = prompt("Enter your name:");
-  if (!name) name = "Anonymous";
+
+  if (!name || name.trim() === "") {
+    name = "Anonymous Producer";
+  } else {
+    name = name.trim();
+  }
 
   let scores = JSON.parse(localStorage.getItem("beatVaultScores")) || [];
 
-  scores.push({ name, score: finalScore });
+  scores.push({ name: name, score: finalScore });
   scores.sort((a, b) => b.score - a.score);
   scores = scores.slice(0, 5);
 
   localStorage.setItem("beatVaultScores", JSON.stringify(scores));
   renderLeaderboard();
 }
-
 function renderLeaderboard() {
   let list = document.getElementById("leaderboardList");
   let scores = JSON.parse(localStorage.getItem("beatVaultScores")) || [];
