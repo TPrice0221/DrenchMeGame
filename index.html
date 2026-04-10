@@ -460,6 +460,7 @@ function handleInput() {
 if (diff < 25) {
   score += 100;
   streak++;
+
   if (streak > bestStreak) {
     bestStreak = streak;
   }
@@ -467,16 +468,12 @@ if (diff < 25) {
   feedback.innerText = randomPerfect();
   target.classList.add("hit");
 
-  // 💧 ACTUAL SPLASH HERE
-  let rect = target.getBoundingClientRect();
-  createSplash(rect.left + rect.width / 2, rect.top + rect.height / 2);
+  let targetRect = target.getBoundingClientRect();
+  createSplash(
+    targetRect.left + targetRect.width / 2,
+    targetRect.top + targetRect.height / 2
+  );
 }
-
-feedback.innerText = randomPerfect();
-
-  target.classList.add("hit");
-}
-
     else if (diff < 60) {
     score += 50;
     streak++;
