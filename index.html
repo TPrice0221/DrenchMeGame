@@ -373,13 +373,18 @@ function handleInput() {
 
   target.classList.remove("hit", "miss");
 
-  if (diff < 25) {
-    score += 100;
-    streak++;
+if (diff < 25) {
+  score += 100;
+  streak++;
+
+  if (streak === 100) {
+    feedback.innerText = "Congrats you won a free drench me shirt 👕💧";
+  } else {
     feedback.innerText = randomPerfect();
-    target.classList.add("hit");
-    target.classList.add("splash");
-setTimeout(() => target.classList.remove("splash"), 300);
+  }
+
+  target.classList.add("hit");
+}
 
   } else if (diff < 60) {
     score += 50;
