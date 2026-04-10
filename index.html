@@ -252,7 +252,7 @@ function startGame() {
 
   let audio = document.getElementById("beat");
   audio.currentTime = 0;
-  audio.play().catch(err => console.log("Audio blocked:", err));
+  audio.play().catch(err => alert("Audio failed: " + err));
 
   audio.onended = endGame;
 
