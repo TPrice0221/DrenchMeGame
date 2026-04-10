@@ -222,7 +222,6 @@ function randomDiss() {
   ];
   return lines[Math.floor(Math.random() * lines.length)];
 }
-
 function startGame() {
   if (gameStarted) return;
   gameStarted = true;
@@ -237,11 +236,13 @@ function startGame() {
 
   let audio = document.getElementById("beat");
   audio.currentTime = 0;
-  audio.play().catch(err =>console.log("START GAME TRIGGERED");
+  audio.play().catch(err => console.log("Audio blocked:", err));
+
   audio.onended = endGame;
 
   startPulse();
   spawnLoop();
+}
 }
 
 function stopGame() {
