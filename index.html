@@ -408,6 +408,7 @@ function randomDiss() {
 }
 function startGame() {
   if (gameStarted) return;
+  bestStreak = 0;
   gameStarted = true;
   endingGame = false;
   document.getElementById("leaderboard").style.display = "none";
@@ -474,15 +475,6 @@ document.getElementById("endContent").innerHTML = `
 `;
   document.getElementById("targetWrapper").style.display = "none";
 
-let resultMessage = "";
-
-if (bestStreak >= 100) {
-  resultMessage = "Congrats you won a Free Drench Me Shirt 👕💧";
-} else {
-  resultMessage = "Try again.";
-}
-
-
 document.getElementById("nameEntry").style.display = "flex";
   setTimeout(() => {
   document.getElementById("playerName").focus();
@@ -512,9 +504,11 @@ const dy = -(Math.random() * 300);
 function restartGame() {
   score = 0;
   streak = 0;
+  bestStreak = 0; // ← add this
   updateUI();
   document.getElementById("feedback").innerText = "";
   startGame();
+}
 }function submitName() {
   let input = document.getElementById("playerName");
   let name = input.value.trim();
